@@ -14,7 +14,7 @@
 Repositori ini berisi kumpulan tugas dan proyek yang dikerjakan selama perkuliahan **Pemrograman Web Lanjut**. Tugas-tugas ini dirancang untuk mengasah kemampuan dalam pengembangan web, mulai dari konsep dasar hingga implementasi teknologi terkini.
 
 ## 📢 Catatan
-Semua tugas yang ada di repositori ini adalah hasil pembelajaran pribadi selama belajar dalam mata kuliah **Pemrograman Web Lanjut**.
+Semua tugas yang ada di repositori ini adalah hasil pembelajaran selama belajar dalam mata kuliah **Pemrograman Web Lanjut**.
 
 ---
 
