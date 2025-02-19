@@ -35,4 +35,10 @@ Route::get('/user/profile', function() {
 
 Route::get('/hello', [WelcomeController::class,'hello']);
 
-Route::resource('photos', PhotoController::class);
+Route::resource('photos', PhotoController::class)-> except([
+    'create','store','update', 'edit'
+]);
+
+Route::resource('photos', PhotoController::class)-> only([
+    'index','show'
+]);
