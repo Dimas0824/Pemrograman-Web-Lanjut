@@ -34,3 +34,6 @@ Route::get('/articles/{id?}', function ($id = 17) {
     return "Halaman Artikel dengan ID $id";
 });
 
+Route::get('/user/profile', function() {
+    //
+    })->name('profile');
