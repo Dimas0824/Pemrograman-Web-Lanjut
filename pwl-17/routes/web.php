@@ -21,7 +21,7 @@ Route::get('/about', function () {
     return "NIM: $nim, <br> Nama: $nama";
 });
 
-Route::get('/user/{name}', function ($name) {
+Route::get('/user/{name?}', function ($name = null) {
     return 'Nama saya '.$name;
 });
 
