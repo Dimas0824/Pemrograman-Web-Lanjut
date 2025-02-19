@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PhotoController;
 
 Route::get('/', [PageController::class, 'index']);
 
@@ -33,3 +34,5 @@ Route::get('/user/profile', function() {
     })->name('profile');
 
 Route::get('/hello', [WelcomeController::class,'hello']);
+
+Route::resource('photos', PhotoController::class);
