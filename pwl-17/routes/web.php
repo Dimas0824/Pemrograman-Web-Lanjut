@@ -43,6 +43,4 @@ Route::resource('photos', PhotoController::class)-> only([
     'index','show'
 ]);
 
-Route::get('/greeting', function () {
-    return view('blog.hello', ['name' => 'Irsyad Dimas']);
-});
+Route::get('/greeting', [WelcomeController::class, 'greeting']);
