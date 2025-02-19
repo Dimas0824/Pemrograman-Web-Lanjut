@@ -42,3 +42,7 @@ Route::resource('photos', PhotoController::class)-> except([
 Route::resource('photos', PhotoController::class)-> only([
     'index','show'
 ]);
+
+Route::get('/greeting', function () {
+    return view('hello', ['name' => 'Irsyad Dimas']);
+});
