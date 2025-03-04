@@ -11,8 +11,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = UserModel::where('username', 'manager9')->firstOrFail();
-        return view('user', ['data' => $user]);
+        $user = UserModel::where('level_id', '1')->count();
+        return view('user', data: ['data' => $user]);
 
         // Tambah data user dengan Eloquent Model
         //$data = [
