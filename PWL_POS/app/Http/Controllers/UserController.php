@@ -17,7 +17,7 @@ class UserController extends Controller
             'password' => Hash::make('12345'),
             'level_id' => 2
         ]);
-        return view('user', data: ['data' => $user]);
+        return view('user', ['data' => $user]);
 
         // Tambah data user dengan Eloquent Model
         //$data = [
