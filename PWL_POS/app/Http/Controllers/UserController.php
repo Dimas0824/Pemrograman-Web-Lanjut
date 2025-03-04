@@ -11,22 +11,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = UserModel::create([
-            'username' => 'manager11',
-            'nama' => 'Manager11',
-            'password' => Hash::make('12345'),
-            'level_id' => 2,
-        ]);
-
-        $user->username = 'manager12';
-
-        $user->save();
-
-        $user->wasChanged(); // true
-        $user->wasChanged('username'); // true
-        $user->wasChanged(['username', 'level_id']); // true
-        $user->wasChanged('nama'); // false
-        $user->wasChanged(['nama', 'username']); // true
+        $user = UserModel::all();
+        return view('user', ['data' => $user]);
 
         // Tambah data user dengan Eloquent Model
         //$data = [
@@ -59,5 +45,22 @@ class UserController extends Controller
         // coba akses model UserModel
         //$user = UserModel::all(); // ambil semua data dari tabel m_user
         //return view('user', ['data' => $user]);
+    }
+
+    public function tambah()
+    {
+        return view('user_tambah');
+    }
+
+    public function tambah_simpan(Request $request)
+    {
+        UserModel::create([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => Hash::make('$request->password'),
+            'level_id' => $request->level_id
+        ]);
+
+        return redirect('/user');
     }
 }
