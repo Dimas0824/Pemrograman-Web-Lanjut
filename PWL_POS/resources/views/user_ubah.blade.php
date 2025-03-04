@@ -12,7 +12,7 @@
     <a href="/user">Kembali</a>
     <br>
 
-    <form method="post" action="/user/ubah_simpan/{{ $user->user_id }}">
+    <form method="POST" action="/user/ubah_simpan/{{ $user->user_id }}">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
 
