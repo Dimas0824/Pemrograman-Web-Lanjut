@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = UserModel::where('level_id', 1)->first();
+        $user = UserModel::firstWherewhere('level_id', 1);
         return view('user', ['data' => $user]);
 
         // Tambah data user dengan Eloquent Model
