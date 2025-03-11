@@ -25,6 +25,7 @@
 
     @stack('css') <!--Digunakan untuk memanggil custom css dari perintah push('css') pada masing masing view-->
 </head>
+
 <!--Navbar-->
 @include('layouts.header')
 <!--/.Navbar-->

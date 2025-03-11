@@ -41,6 +41,82 @@
                     </div>
                 </li>
 
+                <!-- Dark Mode Toggle with Slide Animation -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="darkModeToggle" role="button">
+                        <div class="toggle-container">
+                            <i class="fas fa-moon" id="darkModeIcon"></i>
+                        </div>
+                    </a>
+                </li>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const toggle = document.getElementById("darkModeToggle");
+                        const icon = document.getElementById("darkModeIcon");
+                        const body = document.body;
+                        const toggleContainer = document.querySelector(".toggle-container");
+
+                        // Cek mode yang tersimpan di localStorage
+                        if (localStorage.getItem("darkMode") === "enabled") {
+                            body.classList.add("dark-mode");
+                            icon.classList.replace("fa-moon", "fa-sun");
+                            toggleContainer.classList.add("active");
+                        }
+
+                        toggle.addEventListener("click", function() {
+                            body.classList.toggle("dark-mode");
+                            toggleContainer.classList.toggle("active");
+
+                            if (body.classList.contains("dark-mode")) {
+                                localStorage.setItem("darkMode", "enabled");
+                                icon.classList.replace("fa-moon", "fa-sun");
+                            } else {
+                                localStorage.setItem("darkMode", "disabled");
+                                icon.classList.replace("fa-sun", "fa-moon");
+                            }
+                        });
+                    });
+                </script>
+
+                <style>
+                    .toggle-container {
+                        display: inline-block;
+                        width: 50px;
+                        height: 25px;
+                        background-color: #ddd;
+                        border-radius: 15px;
+                        position: relative;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    }
+
+                    .toggle-container i {
+                        position: absolute;
+                        top: 50%;
+                        left: 5px;
+                        transform: translateY(-50%);
+                        transition: left 0.3s;
+                    }
+
+                    .toggle-container.active {
+                        background-color: #212529;
+                    }
+
+                    .toggle-container.active i {
+                        left: 25px;
+                    }
+
+                    .dark-mode {
+                        background-color: #343a40;
+                        color: white;
+                    }
+
+                    .dark-mode .navbar {
+                        background-color: #343a40;
+                    }
+                </style>
+
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
