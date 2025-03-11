@@ -1,9 +1,14 @@
-<footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.2.0
+<footer class="main-footer text-center p-3">
+    <div>
+        <strong>&copy; 2024 <a href="https://github.com/Dimas0824" target="_blank"
+                style="text-decoration: none; color: #007bff;">
+                Muhammad Irsyad Dimas Abdillah
+            </a></strong>
+        | TI-2F | Absen 17
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
-    reserved.
+    <div class="mt-2">
+        <small>Powered by <a href="https://adminlte.io" target="_blank">AdminLTE</a></small>
+    </div>
 </footer>
 
 <!-- Control Sidebar -->
