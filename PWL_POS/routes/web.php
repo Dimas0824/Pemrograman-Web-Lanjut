@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SuplierController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
@@ -46,15 +46,15 @@ Route::group(['prefix' => 'kategori'], function () {
 });
 
 // CRUD untuk m_supplier
-Route::group(['prefix' => 'supplier'], function () {
-    Route::get('/', [SupplierController::class, 'index']);
-    Route::get('/list', [SupplierController::class, 'list']);
-    Route::get('/create', [SupplierController::class, 'create']);
-    Route::post('/', [SupplierController::class, 'store']);
-    Route::get('/{id}', [SupplierController::class, 'show']);
-    Route::get('/{id}/edit', [SupplierController::class, 'edit']);
-    Route::put('/{id}', [SupplierController::class, 'update']);
-    Route::delete('/{id}', [SupplierController::class, 'destroy']);
+Route::group(['prefix' => 'suplier'], function () {
+    Route::get('/', [SuplierController::class, 'index']);
+    Route::get('/list', [SuplierController::class, 'list']);
+    Route::get('/create', action: [SuplierController::class, 'create']);
+    Route::post('/', [SuplierController::class, 'store']);
+    Route::get('/{id}', [SuplierController::class, 'show']);
+    Route::get('/{id}/edit', [SuplierController::class, 'edit']);
+    Route::put('/{id}', [SuplierController::class, 'update']);
+    Route::delete('/{id}', [SuplierController::class, 'destroy']);
 });
 
 // CRUD untuk m_barang

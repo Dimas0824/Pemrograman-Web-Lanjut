@@ -11,7 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('m_suplier', function (Blueprint $table) {
-            $table->id();
+            $table->id('suplier_id');
+            $table->string('nama_suplier');
+            $table->string('kontak')->nullable();
+            $table->string('alamat')->nullable();
             $table->timestamps();
         });
     }
@@ -21,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('suplier_models');
+        Schema::dropIfExists('m_suplier');
     }
 };

@@ -5,7 +5,7 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+                <a class="btn btn-sm btn-primary mt-1" href="{{ url('suplier/create') }}">Tambah</a>
             </div>
         </div>
         <div class="card-body">
@@ -20,25 +20,22 @@
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label">Filter:</label>
                         <div class="col-3">
-                            <select class="form-control" id="barang_kode" name="barang_kode">
+                            <select class="form-control" id="suplier_id" name="suplier_id">
                                 <option value="">- Semua -</option>
-                                @foreach ($barang as $item)
-                                    <option value="{{ $item->barang_kode }}">{{ $item->barang_nama }} -
-                                        Rp{{ number_format($item->harga_beli) }} / Rp{{ number_format($item->harga_jual) }}
-                                    </option>
+                                @foreach ($suplier as $item)
+                                    <option value="{{ $item->suplier_id }}">{{ $item->nama_suplier }}</option>
                                 @endforeach
                             </select>
-                            <small class="form-text text-muted">Kode Barang</small>
+                            <small class="form-text text-muted">Pilih suplier</small>
                         </div>
                     </div>
                 </div>
             </div>
-            <table class="table table-bordered table-striped table-hover table-sm" id="table_barang">
+            <table class="table table-bordered table-striped table-hover table-sm" id="table_suplier">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Kode Barang</th>
-                        <th>Nama Barang</th>
+                        <th>Nama Suplier</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -47,53 +44,37 @@
     </div>
 @endsection
 
-@push('css')
-@endpush
-
 @push('js')
     <script>
         $(document).ready(function() {
-            var dataBarang = $('#table_barang').DataTable({
+            var datasuplier = $('#table_suplier').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('barang/list') }}",
+                    "url": "{{ url('suplier/list') }}",
                     "dataType": "json",
                     "type": "GET",
                     "data": function(d) {
-                        d.barang_kode = $('#barang_kode').val();
+                        d.suplier_id = $('#suplier_id').val();
                     }
                 },
                 columns: [{
-                        data: "barang_id",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
+                        data: "suplier_id",
+                        className: "text-center"
                     },
                     {
-                        data: "barang_kode",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "barang_nama",
-                        className: "",
-                        orderable: true,
-                        searchable: true
+                        data: "nama_suplier"
                     },
                     {
                         data: "aksi",
-                        className: "",
                         orderable: false,
                         searchable: false
                     }
                 ]
             });
 
-            $('#barang_kode').on('change', function() {
-                dataBarang.ajax.reload();
+            $('#suplier_id').on('change', function() {
+                datasuplier.ajax.reload();
             });
-
         });
     </script>
 @endpush
