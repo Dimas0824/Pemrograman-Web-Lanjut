@@ -23,7 +23,7 @@
                             <select class="form-control" id="kategori_kode" name="kategori_kode">
                                 <option value="">- Semua -</option>
                                 @foreach ($kategori as $item)
-                                    <option value="{{ $item->kategori_kode }}">{{ $item->kategori_nama }}</option>
+                                    <option value="{{ $item->kategori_kode }}">{{ $item->kategori_kode }}</option>
                                 @endforeach
                             </select>
                             <small class="form-text text-muted">Kode Kategori</small>
@@ -89,7 +89,7 @@
             });
 
             $('#kategori_kode').on('change', function() {
-                dataLevel.ajax.reload();
+                dataKategori.ajax.reload();
             });
 
         });

@@ -52,13 +52,13 @@
     <script>
         $(document).ready(function() {
             var dataLevel = $('#table_level').DataTable({
+                processing: true,
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('level/list') }}",
-                    "dataType": "json",
-                    "type": "GET",
-                    "data": function(d) {
-                        d.level_code = $('#level_code').val();
+                    url: "{{ url('level/list') }}",
+                    type: "GET",
+                    data: function(d) {
+                        d.level_code = $('#level_code').val(); // Mengirimkan nilai filter
                     }
                 },
                 columns: [{

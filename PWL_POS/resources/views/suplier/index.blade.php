@@ -15,22 +15,6 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Filter:</label>
-                        <div class="col-3">
-                            <select class="form-control" id="suplier_id" name="suplier_id">
-                                <option value="">- Semua -</option>
-                                @foreach ($suplier as $item)
-                                    <option value="{{ $item->suplier_id }}">{{ $item->nama_suplier }}</option>
-                                @endforeach
-                            </select>
-                            <small class="form-text text-muted">Pilih suplier</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <table class="table table-bordered table-striped table-hover table-sm" id="table_suplier">
                 <thead>
                     <tr>
@@ -73,7 +57,7 @@
             });
 
             $('#suplier_id').on('change', function() {
-                datasuplier.ajax.reload();
+                dataSuplier.ajax.reload();
             });
         });
     </script>

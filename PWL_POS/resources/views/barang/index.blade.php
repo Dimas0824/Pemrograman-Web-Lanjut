@@ -55,6 +55,7 @@
         $(document).ready(function() {
             var dataBarang = $('#table_barang').DataTable({
                 serverSide: true,
+                processing: true,
                 ajax: {
                     "url": "{{ url('barang/list') }}",
                     "dataType": "json",

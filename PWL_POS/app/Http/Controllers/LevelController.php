@@ -36,9 +36,14 @@ class LevelController extends Controller
     // Ambil data level dalam bentuk JSON untuk DataTables
     public function list(Request $request)
     {
-        $levels = LevelModel::select('level_id', 'level_code', 'level_nama', 'created_at', 'updated_at');
+        $query = LevelModel::select('level_id', 'level_code', 'level_nama', 'created_at', 'updated_at');
 
-        return DataTables::of($levels)
+        // Tambahkan filter jika level_code dikirimkan
+        if (!empty($request->level_code)) {
+            $query->where('level_code', $request->level_code);
+        }
+
+        return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('aksi', function ($level) {
                 $btn = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> ';
@@ -53,6 +58,7 @@ class LevelController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
     }
+
 
     // Menampilkan halaman form tambah level
     public function create()

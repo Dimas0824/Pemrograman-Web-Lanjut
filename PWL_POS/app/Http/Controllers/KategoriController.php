@@ -37,6 +37,11 @@ class KategoriController extends Controller
     {
         $kategori = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama', 'created_at', 'updated_at');
 
+        // Tambahkan filter berdasarkan kategori_kode (bukan kategori_nama)
+        if (!empty($request->kategori_kode)) {
+            $kategori->where('kategori_kode', $request->kategori_kode);
+        }
+
         return DataTables::of($kategori)
             ->addIndexColumn()
             ->addColumn('aksi', function ($kategori) {
@@ -52,6 +57,7 @@ class KategoriController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
     }
+
 
     // Menampilkan halaman form tambah kategori
     public function create()
