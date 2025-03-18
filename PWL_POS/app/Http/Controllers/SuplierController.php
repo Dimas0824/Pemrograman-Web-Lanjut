@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\SuplierModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class SuplierController extends Controller
 {
+    // Menampilkan halaman daftar suplier
     public function index()
     {
         $breadcrumb = (object) [
@@ -19,73 +21,150 @@ class SuplierController extends Controller
             'title' => 'Daftar suplier dalam sistem'
         ];
 
-        $activeMenu = 'suplier';
+        $activeMenu = 'suplier'; // Set menu yang aktif
 
-        $suplier = SuplierModel::select('suplier_id', 'nama_suplier', 'kontak', 'alamat')->distinct()->get();
+        // Ambil data suplier dari database
+        $supliers = SuplierModel::select('suplier_id', 'nama_suplier', 'kontak', 'alamat', 'created_at', 'updated_at')->get();
 
-        return view('suplier.index', compact('breadcrumb', 'page', 'activeMenu', 'suplier'));
+        return view('suplier.index', [
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
+            'activeMenu' => $activeMenu,
+            'supliers' => $supliers // Kirim ke view
+        ]);
     }
 
+    // Ambil data suplier dalam bentuk JSON untuk DataTables
     public function list(Request $request)
     {
         $suplier = SuplierModel::select('suplier_id', 'nama_suplier', 'kontak', 'alamat', 'created_at', 'updated_at');
 
-        if (!empty($request->nama_suplier)) {
-            $suplier->where('nama_suplier', 'like', "%{$request->nama_suplier}%");
+        // Filter data berdasarkan suplier_id
+        if ($request->suplier_id) {
+            $suplier->where('suplier_id', $request->suplier_id);
         }
 
         return DataTables::of($suplier)
             ->addIndexColumn()
             ->addColumn('aksi', function ($suplier) {
-                $btn = '<a href="' . url('/suplier/' . $suplier->suplier_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                $btn .= '<a href="' . url('/suplier/' . $suplier->suplier_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/suplier/' . $suplier->suplier_id) . '">'
-                    . csrf_field()
-                    . method_field('DELETE')
-                    . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\')">Hapus</button>'
-                    . '</form>';
+                $btn = '<button onclick="modalAction(\'' . url('/suplier/' . $suplier->suplier_id . '/show') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/suplier/' . $suplier->suplier_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/suplier/' . $suplier->suplier_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
             ->make(true);
     }
 
-    public function create()
+    public function create_ajax()
     {
-        $breadcrumb = (object) [
-            'title' => 'Tambah Suplier',
-            'list' => ['Home', 'Suplier', 'Tambah']
-        ];
-
-        $page = (object) [
-            'title' => 'Tambah suplier baru'
-        ];
-
-        $activeMenu = 'suplier';
-
-        return view('suplier.suplierCreate', compact('breadcrumb', 'page', 'activeMenu'));
+        return view('suplier.create_ajax');
     }
 
-    public function store(Request $request)
+    public function store_ajax(Request $request)
     {
-        $request->validate([
-            'nama_suplier' => 'required|string|max:255',
-            'kontak' => 'nullable|string|max:50',
-            'alamat' => 'nullable|string|max:255'
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'nama_suplier' => 'required|string|max:255',
+                'kontak' => 'nullable|string|max:255',
+                'alamat' => 'nullable|string|max:255'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            SuplierModel::create($request->all());
+            return response()->json([
+                'status' => true,
+                'message' => 'Data suplier berhasil disimpan'
+            ]);
+        }
+        return redirect('/suplier');
+    }
+
+    public function edit_ajax(string $id)
+    {
+        $suplier = SuplierModel::find($id);
+        return view('suplier.edit_ajax', [
+            'suplier' => $suplier
         ]);
-
-        SuplierModel::create($request->only('nama_suplier', 'kontak', 'alamat'));
-
-        return redirect('/suplier')->with('success', 'Data suplier berhasil disimpan');
     }
 
+    public function update_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'nama_suplier' => 'required|string|max:255',
+                'kontak' => 'nullable|string|max:255',
+                'alamat' => 'nullable|string|max:255'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $suplier = SuplierModel::find($id);
+            if ($suplier) {
+                $suplier->update($request->all());
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data suplier berhasil diupdate'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/suplier');
+    }
+
+    public function confirm_ajax(string $id)
+    {
+        $suplier = SuplierModel::find($id);
+        return view('suplier.confirm_ajax', [
+            'suplier' => $suplier
+        ]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $suplier = SuplierModel::find($id);
+            if ($suplier) {
+                $suplier->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data suplier berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/suplier');
+    }
+
+    // Menampilkan detail suplier
     public function show($suplier_id)
     {
         $suplier = SuplierModel::find($suplier_id);
-
-        if (!$suplier) {
-            return redirect('/suplier')->with('error', 'Data suplier tidak ditemukan');
-        }
 
         $breadcrumb = (object) [
             'title' => 'Detail Suplier',
@@ -98,55 +177,11 @@ class SuplierController extends Controller
 
         $activeMenu = 'suplier';
 
-        return view('suplier.suplierShow', compact('suplier', 'breadcrumb', 'page', 'activeMenu'));
-    }
-
-    public function edit($suplier_id)
-    {
-        $suplier = SuplierModel::find($suplier_id);
-
-        if (!$suplier) {
-            return redirect('/suplier')->with('error', 'Data suplier tidak ditemukan.');
-        }
-
-        return view('suplier.suplierEdit', [
-            'breadcrumb' => (object) ['title' => 'Edit Suplier', 'list' => ['Home', 'Suplier', 'Edit']],
-            'page' => (object) ['title' => 'Edit Suplier'],
+        return view('suplier.suplierShow', [
             'suplier' => $suplier,
-            'activeMenu' => 'suplier'
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
+            'activeMenu' => $activeMenu
         ]);
-    }
-
-    public function update(Request $request, $suplier_id)
-    {
-        $request->validate([
-            'nama_suplier' => 'required|string|max:255',
-            'kontak' => 'nullable|string|max:50',
-            'alamat' => 'nullable|string|max:255'
-        ]);
-
-        $suplier = SuplierModel::find($suplier_id);
-        if (!$suplier) {
-            return redirect('/suplier')->with('error', 'Data suplier tidak ditemukan.');
-        }
-
-        $suplier->update($request->only('nama_suplier', 'kontak', 'alamat'));
-
-        return redirect('/suplier')->with('success', 'Data suplier berhasil diubah');
-    }
-
-    public function destroy($suplier_id)
-    {
-        $suplier = SuplierModel::find($suplier_id);
-        if (!$suplier) {
-            return redirect('/suplier')->with('error', 'Data suplier tidak ditemukan');
-        }
-
-        try {
-            $suplier->delete();
-            return redirect('/suplier')->with('success', 'Data suplier berhasil dihapus');
-        } catch (\Illuminate\Database\QueryException $e) {
-            return redirect('/suplier')->with('error', 'Data suplier sedang digunakan');
-        }
     }
 }
