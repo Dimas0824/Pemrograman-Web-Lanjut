@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'user'], function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/list', [UserController::class, 'list']);
+    Route::get('/create', [UserController::class, 'create']);
+    Route::post('/', [UserController::class, 'store']); // Menambahkan rute POST
     Route::get('/create_ajax', [UserController::class, 'create_ajax']);
     Route::post('/ajax', [UserController::class, 'store_ajax']);
     Route::get('/{id}/show', [UserController::class, 'show']);
@@ -24,6 +26,8 @@ Route::group(['prefix' => 'user'], function () {
 Route::group(['prefix' => 'level'], function () {
     Route::get('/', [LevelController::class, 'index']);
     Route::get('/list', [LevelController::class, 'list']);
+    Route::get('/create', [LevelController::class, 'create']);
+    Route::post('/', [LevelController::class, 'store']); // Menambahkan rute POST
     Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
     Route::post('/ajax', [LevelController::class, 'store_ajax']);
     Route::get('/{id}/show', [LevelController::class, 'show']);
@@ -37,8 +41,10 @@ Route::group(['prefix' => 'level'], function () {
 Route::group(['prefix' => 'kategori'], function () {
     Route::get('/', [KategoriController::class, 'index']);
     Route::get('/list', [KategoriController::class, 'list']);
+    Route::get('/create', [KategoriController::class, 'create']);
+    Route::post('/', [KategoriController::class, 'store']); // Sudah ada
     Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
-    Route::post('/ajax', [KategoriController::class, 'store_ajax']);
+    Route::post('/ajax', [KategoriController::class, 'store_ajax'])->withoutMiddleware('auth');
     Route::get('/{id}/show', [KategoriController::class, 'show']);
     Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
@@ -50,6 +56,8 @@ Route::group(['prefix' => 'kategori'], function () {
 Route::group(['prefix' => 'suplier'], function () {
     Route::get('/', [SuplierController::class, 'index']);
     Route::get('/list', [SuplierController::class, 'list']);
+    Route::get('/create', [SuplierController::class, 'create']);
+    Route::post('/', [SuplierController::class, 'store']); // Menambahkan rute POST
     Route::get('/create_ajax', [SuplierController::class, 'create_ajax']);
     Route::post('/ajax', [SuplierController::class, 'store_ajax']);
     Route::get('/{id}/show', [SuplierController::class, 'show']);
@@ -63,6 +71,8 @@ Route::group(['prefix' => 'suplier'], function () {
 Route::group(['prefix' => 'barang'], function () {
     Route::get('/', [BarangController::class, 'index']);
     Route::get('/list', [BarangController::class, 'list']);
+    Route::get('/create', [BarangController::class, 'create']);
+    Route::post('/', [BarangController::class, 'store']); // Menambahkan rute POST
     Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
     Route::post('/ajax', [BarangController::class, 'store_ajax']);
     Route::get('/{id}/show', [BarangController::class, 'show']);

@@ -134,7 +134,6 @@ class UserController extends Controller
         ]);
     }
 
-
     // Menampilkan halaman form edit user
     public function edit(string $id)
     {
