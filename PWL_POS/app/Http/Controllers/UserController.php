@@ -203,7 +203,6 @@ class UserController extends Controller
 
     public function store_ajax(Request $request)
     {
-        // cek apakah request berupa ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'level_id' => 'required|integer',
@@ -217,9 +216,9 @@ class UserController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false, // response status, false: error/gagal, true: berhasil
+                    'status' => false,
                     'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors(), // pesan error validasi
+                    'msgField' => $validator->errors(),
                 ]);
             }
 
@@ -229,8 +228,7 @@ class UserController extends Controller
                 'message' => 'Data user berhasil disimpan'
             ]);
         }
-
-        redirect('/');
+        return redirect('/');
     }
 
     // Ambil data user dalam bentuk json untuk datatables
@@ -319,6 +317,6 @@ class UserController extends Controller
                 ]);
             }
         }
-        return redirect('/');
+        return redirect('/user');
     }
 }
