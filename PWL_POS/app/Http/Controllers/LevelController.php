@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LevelModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class LevelController extends Controller
 {
@@ -59,43 +60,146 @@ class LevelController extends Controller
             ->make(true);
     }
 
-
-    // Menampilkan halaman form tambah level
-    public function create()
+    public function create_ajax()
     {
-        $breadcrumb = (object) [
-            'title' => 'Tambah Level',
-            'list' => ['Home', 'Level', 'Tambah']
-        ];
+        return view('level.create_ajax');
+    }
 
-        $page = (object) [
-            'title' => 'Tambah level baru'
-        ];
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'level_code' => 'required|string|max:10|unique:m_level,level_code',
+                'level_nama' => 'required|string|max:100'
+            ];
 
-        $activeMenu = 'level';
+            $validator = Validator::make($request->all(), $rules);
 
-        return view('level.levelCreate', [
-            'breadcrumb' => $breadcrumb,
-            'page' => $page,
-            'activeMenu' => $activeMenu
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            LevelModel::create($request->all());
+            return response()->json([
+                'status' => true,
+                'message' => 'Data level berhasil disimpan'
+            ]);
+        }
+        return redirect('/level');
+    }
+
+    public function edit_ajax(string $id)
+    {
+        $level = LevelModel::find($id);
+        return view('level.edit_ajax', [
+            'level' => $level
         ]);
     }
 
-    // Menyimpan data level baru
-    public function store(Request $request)
+    public function update_ajax(Request $request, $id)
     {
-        $request->validate([
-            'level_code' => 'required|string|unique:m_level,level_code',
-            'level_nama' => 'required|string|max:100'
-        ]);
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'level_code' => 'required|string|max:10|unique:m_level,level_code,' . $id . ',level_id',
+                'level_nama' => 'required|string|max:100'
+            ];
 
-        LevelModel::create([
-            'level_code' => $request->level_code,
-            'level_nama' => $request->level_nama
-        ]);
+            $validator = Validator::make($request->all(), $rules);
 
-        return redirect('/level')->with('success', 'Data level berhasil disimpan');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $level = LevelModel::find($id);
+            if ($level) {
+                $level->update($request->all());
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data level berhasil diupdate'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/level');
     }
+
+    public function confirm_ajax(string $id)
+    {
+        $level = LevelModel::find($id);
+        return view('level.confirm_ajax', [
+            'level' => $level
+        ]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $level = LevelModel::find($id);
+            if ($level) {
+                $level->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data level berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/level');
+    }
+
+
+    // // Menampilkan halaman form tambah level
+    // public function create()
+    // {
+    //     $breadcrumb = (object) [
+    //         'title' => 'Tambah Level',
+    //         'list' => ['Home', 'Level', 'Tambah']
+    //     ];
+
+    //     $page = (object) [
+    //         'title' => 'Tambah level baru'
+    //     ];
+
+    //     $activeMenu = 'level';
+
+    //     return view('level.levelCreate', [
+    //         'breadcrumb' => $breadcrumb,
+    //         'page' => $page,
+    //         'activeMenu' => $activeMenu
+    //     ]);
+    // }
+
+    // // Menyimpan data level baru
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'level_code' => 'required|string|unique:m_level,level_code',
+    //         'level_nama' => 'required|string|max:100'
+    //     ]);
+
+    //     LevelModel::create([
+    //         'level_code' => $request->level_code,
+    //         'level_nama' => $request->level_nama
+    //     ]);
+
+    //     return redirect('/level')->with('success', 'Data level berhasil disimpan');
+    // }
 
     // Menampilkan detail level
     public function show($level_id)
@@ -121,56 +225,56 @@ class LevelController extends Controller
         ]);
     }
 
-    // Menampilkan halaman form edit level
-    public function edit($id)
-    {
-        $level = LevelModel::find($id);
+    // // Menampilkan halaman form edit level
+    // public function edit($id)
+    // {
+    //     $level = LevelModel::find($id);
 
-        if (!$level) {
-            return redirect('level')->with('error', 'Data level tidak ditemukan.');
-        }
+    //     if (!$level) {
+    //         return redirect('level')->with('error', 'Data level tidak ditemukan.');
+    //     }
 
-        $levels = LevelModel::all(); // Ambil semua level untuk dropdown
+    //     $levels = LevelModel::all(); // Ambil semua level untuk dropdown
 
-        return view('level.levelEdit', [
-            'breadcrumb' => (object) ['title' => 'Edit Level', 'list' => ['Home', 'Level', 'Edit']],
-            'page' => (object) ['title' => 'Edit Level'],
-            'level' => $level, // Data level yang sedang diedit
-            'levels' => $levels, // Data untuk dropdown
-            'activeMenu' => 'level'
-        ]);
-    }
+    //     return view('level.levelEdit', [
+    //         'breadcrumb' => (object) ['title' => 'Edit Level', 'list' => ['Home', 'Level', 'Edit']],
+    //         'page' => (object) ['title' => 'Edit Level'],
+    //         'level' => $level, // Data level yang sedang diedit
+    //         'levels' => $levels, // Data untuk dropdown
+    //         'activeMenu' => 'level'
+    //     ]);
+    // }
 
 
-    // Menyimpan perubahan data level
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'level_code' => 'required|string|unique:m_level,level_code,' . $id . ',level_id',
-            'level_nama' => 'required|string|max:100'
-        ]);
+    // // Menyimpan perubahan data level
+    // public function update(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'level_code' => 'required|string|unique:m_level,level_code,' . $id . ',level_id',
+    //         'level_nama' => 'required|string|max:100'
+    //     ]);
 
-        LevelModel::find($id)->update([
-            'level_code' => $request->level_code,
-            'level_nama' => $request->level_nama
-        ]);
+    //     LevelModel::find($id)->update([
+    //         'level_code' => $request->level_code,
+    //         'level_nama' => $request->level_nama
+    //     ]);
 
-        return redirect('/level')->with('success', 'Data level berhasil diubah');
-    }
+    //     return redirect('/level')->with('success', 'Data level berhasil diubah');
+    // }
 
-    // Menghapus data level
-    public function destroy($id)
-    {
-        $check = LevelModel::find($id);
-        if (!$check) {
-            return redirect('/level')->with('error', 'Data level tidak ditemukan');
-        }
+    // // Menghapus data level
+    // public function destroy($id)
+    // {
+    //     $check = LevelModel::find($id);
+    //     if (!$check) {
+    //         return redirect('/level')->with('error', 'Data level tidak ditemukan');
+    //     }
 
-        try {
-            LevelModel::destroy($id);
-            return redirect('/level')->with('success', 'Data level berhasil dihapus');
-        } catch (\Illuminate\Database\QueryException $e) {
-            return redirect('/level')->with('error', 'Data level sedang digunakan');
-        }
-    }
+    //     try {
+    //         LevelModel::destroy($id);
+    //         return redirect('/level')->with('success', 'Data level berhasil dihapus');
+    //     } catch (\Illuminate\Database\QueryException $e) {
+    //         return redirect('/level')->with('error', 'Data level sedang digunakan');
+    //     }
+    // }
 }
