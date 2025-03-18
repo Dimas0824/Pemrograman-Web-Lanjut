@@ -28,7 +28,7 @@
                     <div class="col-10">
                         <select class="form-control" id="kategori_id" name="kategori_id" required>
                             <option value="">-- Pilih Kategori --</option>
-                            @foreach ($kategoriList as $kat)
+                            @foreach ($kategori as $kat)
                                 <option value="{{ $kat->id }}" {{ old('kategori_id') == $kat->id ? 'selected' : '' }}>
                                     {{ $kat->kategori_nama }}
                                 </option>
