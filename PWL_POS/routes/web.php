@@ -74,7 +74,7 @@ Route::group(['prefix' => 'barang'], function () {
     Route::get('/create', [BarangController::class, 'create']);
     Route::post('/', [BarangController::class, 'store']); // Menambahkan rute POST
     Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
-    Route::post('/ajax', [BarangController::class, 'store_ajax']);
+    Route::post('/ajax', [BarangController::class, 'store_ajax'])->middleware('web');
     Route::get('/{id}/show', [BarangController::class, 'show']);
     Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']);

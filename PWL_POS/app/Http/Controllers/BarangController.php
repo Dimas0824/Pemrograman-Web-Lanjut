@@ -181,6 +181,7 @@ class BarangController extends Controller
 
     public function store_ajax(Request $request)
     {
+        dd($request->method());
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'kategori_id' => 'required|integer',
@@ -206,7 +207,7 @@ class BarangController extends Controller
                 'message' => 'Data barang berhasil disimpan'
             ]);
         }
-        return redirect('/');
+        return redirect('/barang');
     }
 
     // Ambil data barang dalam bentuk json untuk datatables
