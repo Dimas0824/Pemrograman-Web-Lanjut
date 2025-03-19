@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Kategori</label>
+                    <label for="kategori_nama">Kategori</label>
                     <select name="kategori_id" id="kategori_id" class="form-control" required>
                         <option value="">-- Pilih Kategori --</option>
                         @foreach ($kategori as $item)
@@ -19,23 +19,27 @@
                     </select>
                     <small id="error-kategori_id" class="error-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Kode Barang</label>
+                    <label for="barang_kode">Kode Barang</label>
                     <input type="text" name="barang_kode" id="barang_kode" class="form-control" required>
                     <small id="error-barang_kode" class="error-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Nama Barang</label>
+                    <label for="barang_nama">Nama Barang</label>
                     <input type="text" name="barang_nama" id="barang_nama" class="form-control" required>
                     <small id="error-barang_nama" class="error-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Harga Beli</label>
+                    <label for="harga_beli">Harga Beli</label>
                     <input type="number" name="harga_beli" id="harga_beli" class="form-control" required>
                     <small id="error-harga_beli" class="error-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Harga Jual</label>
+                    <label for="harga_jual">Harga Jual</label>
                     <input type="number" name="harga_jual" id="harga_jual" class="form-control" required>
                     <small id="error-harga_jual" class="error-text text-danger"></small>
                 </div>
@@ -80,10 +84,11 @@
             },
             submitHandler: function(form, event) {
                 event.preventDefault(); // Mencegah pengiriman form default
+                console.log("Form action: ", form.action); // Debug URL
 
                 $.ajax({
-                    url: form.action,
-                    type: 'POST', // Pastikan POST
+                    url: form.action, // Pastikan URL sesuai
+                    type: 'POST', // Harus POST
                     data: $(form).serialize(),
                     dataType: 'json',
                     contentType: 'application/x-www-form-urlencoded',
@@ -95,7 +100,6 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-
                             $('#form-tambah-barang')[0].reset();
                             $('#table_barang').DataTable().ajax.reload();
                         } else {
@@ -120,7 +124,6 @@
                         });
                     }
                 });
-
                 return false; // Pastikan form tidak dikirim ulang
             },
             errorElement: 'span',

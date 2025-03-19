@@ -7,6 +7,7 @@ use App\Models\KategoriModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class BarangController extends Controller
 {
@@ -61,19 +62,28 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'barang_kode' => 'required|string|unique:barang,barang_kode', // Kode barang harus unik
-            'barang_nama' => 'required|string|max:100', // Nama barang wajib diisi dengan maksimal 100 karakter
-            'harga_beli' => 'required|numeric|min:0', // Harga beli harus berupa angka
-            'harga_jual' => 'required|numeric|min:0', // Harga jual harus berupa angka
-            'kategori_id' => 'required|integer' // Kategori ID harus berupa angka
+            'barang_kode' => 'required|string|unique:m_barang,barang_kode',
+            'barang_nama' => 'required|string|max:100',
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0',
+            'kategori_id' => 'required|exists:m_kategori,kategori_id' // Validasi kategori_id
         ]);
 
+        $data = [
+            'barang_kode' => $request->barang_kode,
+            'barang_nama' => $request->barang_nama,
+            'harga_beli' => $request->harga_beli,
+            'harga_jual' => $request->harga_jual,
+            'kategori_id' => $request->kategori_id, // Pastikan ini ada
+        ];
+
+        // Langsung gunakan kategori_id tanpa mencari kategori_nama
         BarangModel::create([
             'barang_kode' => $request->barang_kode,
             'barang_nama' => $request->barang_nama,
             'harga_beli' => $request->harga_beli,
             'harga_jual' => $request->harga_jual,
-            'kategori_id' => $request->kategori_id
+            'kategori_id' => $request->input('kategori_id') // Simpan ID kategori
         ]);
 
         return redirect('/barang')->with('success', 'Data barang berhasil disimpan');
@@ -181,11 +191,10 @@ class BarangController extends Controller
 
     public function store_ajax(Request $request)
     {
-        dd($request->method());
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'kategori_id' => 'required|integer',
-                'barang_kode' => 'required|string|unique:barang,barang_kode',
+                'barang_kode' => 'required|string|unique:m_barang,barang_kode',
                 'barang_nama' => 'required|string|max:100',
                 'harga_beli' => 'required|numeric|min:0',
                 'harga_jual' => 'required|numeric|min:0'

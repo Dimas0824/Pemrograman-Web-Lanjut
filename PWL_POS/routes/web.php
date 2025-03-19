@@ -5,7 +5,11 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SuplierController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
+
+// Routes for dashboard (welcome.blade.php)
+Route::get('/', [WelcomeController::class, 'index']);
 
 // Routes for User
 Route::group(['prefix' => 'user'], function () {
@@ -70,11 +74,11 @@ Route::group(['prefix' => 'suplier'], function () {
 // Routes for Barang
 Route::group(['prefix' => 'barang'], function () {
     Route::get('/', [BarangController::class, 'index']);
-    Route::get('/list', [BarangController::class, 'list']);
+    Route::post('/list', [BarangController::class, 'list']);
     Route::get('/create', [BarangController::class, 'create']);
     Route::post('/', [BarangController::class, 'store']); // Menambahkan rute POST
     Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
-    Route::post('/ajax', [BarangController::class, 'store_ajax'])->middleware('web');
+    Route::post('/ajax', [BarangController::class, 'store_ajax'])->name('barang.store_ajax');
     Route::get('/{id}/show', [BarangController::class, 'show']);
     Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']);
