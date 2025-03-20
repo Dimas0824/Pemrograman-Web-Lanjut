@@ -29,8 +29,22 @@ class UserModel extends Authenticatable
         'password' => 'hashed',
     ]; // casting agar password dienkripsi otomatis
 
+    //relasi ke tabel level
     public function level(): BelongsTo
     {
         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
     }
+
+    //mendapatkan nama role
+    public function getRoleName(): string
+    {
+        return $this->level->nama_level;
+    }
+
+    //cek apakah user memiliki role tertentu
+    public function hasRole(string $role): bool
+    {
+        return $this->level->nama_level == $role;
+    }
 }
+
