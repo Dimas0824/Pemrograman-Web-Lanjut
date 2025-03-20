@@ -70,4 +70,32 @@
             </li>
         </ul>
     </nav>
+
+    <!-- Logout Button -->
+    <br><br>
+    <div class="mt-4 mb-3 text-center">
+        <a href="javascript:void(0);" class="btn btn-danger btn-block" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
 </div>
+<script>
+    document.getElementById("logout-btn").addEventListener("click", function(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "Apakah Anda yakin ingin logout?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, Logout",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect ke logout
+                window.location.href = "{{ route('logout') }}";
+            }
+        });
+    });
+</script>

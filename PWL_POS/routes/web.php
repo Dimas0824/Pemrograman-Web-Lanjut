@@ -13,8 +13,8 @@ Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter id, maka harus b
 
 // Routes for login (auth.login)
 Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/postlogin', [AuthController::class, 'postlogin']);
-Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::post('/login', [AuthController::class, 'postlogin']);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware(['auth'])->group(function () { //login dulu sebelum akses route dibawah
     // Routes for dashboard (welcome.blade.php)
