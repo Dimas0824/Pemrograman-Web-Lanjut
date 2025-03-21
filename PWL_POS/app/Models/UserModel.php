@@ -38,13 +38,18 @@ class UserModel extends Authenticatable
     //mendapatkan nama role
     public function getRoleName(): string
     {
-        return $this->level->nama_level;
+        return $this->level->level_nama;
     }
 
     //cek apakah user memiliki role tertentu
     public function hasRole(string $role): bool
     {
-        return $this->level->nama_level == $role;
+        return $this->level->level_nama == $role;
+    }
+
+    //mendapatkan kode role
+    public function getRole(): string
+    {
+        return $this->level->level_code;
     }
 }
-

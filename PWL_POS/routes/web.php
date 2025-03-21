@@ -35,8 +35,8 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
         Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']);
     });
 
-    // Routes for Level dengan middleware auth dan authorize
-    Route::middleware(['authorize:1'])->group(function () {
+    // Routes untuk Level dengan middleware auth dan authorize
+    Route::middleware(['auth', 'authorize:ADM,MNG'])->group(function () {
         Route::prefix('level')->group(function () {
             Route::get('/', [LevelController::class, 'index']);
             Route::get('/list', [LevelController::class, 'list']);

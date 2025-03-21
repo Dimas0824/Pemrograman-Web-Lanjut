@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,19 +10,16 @@ class AuthorizeUser
 {
     /**
      * Handle an incoming request.
-     *
-     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)
      */
-    public function handle(Request $request, Closure $next, $levelId = ''): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        $user = $request->user(); // ambil data user yg login
+        $user_role = $request->user()?->getRole(); // Mendapatkan role user yang sedang login
 
-        // Cek berdasarkan level_id langsung
-        if ($user->level_id == $levelId) {
+        if ($user_role && in_array($user_role, $roles)) { // Cek apakah role user ada di dalam daftar roles
             return $next($request);
         }
 
-        // jika tidak punya level yang sesuai, tampilkan error 403
+        // Jika tidak punya level yang sesuai, tampilkan error 403
         abort(403, 'Forbidden. Kamu tidak punya akses ke halaman ini');
     }
 }
