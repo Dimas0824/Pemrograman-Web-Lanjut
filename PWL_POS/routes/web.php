@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
     });
 
     // Routes for Level dengan middleware auth dan authorize
-    Route::middleware(['authorize:ADM'])->group(function () {
+    Route::middleware(['authorize:1'])->group(function () {
         Route::prefix('level')->group(function () {
             Route::get('/', [LevelController::class, 'index']);
             Route::get('/list', [LevelController::class, 'list']);
