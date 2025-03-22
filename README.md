@@ -6,7 +6,7 @@
 | **NIM**      | 2341720088                    |
 | **Kelas**    | TI-2F                         |
 | **Absen**    | 17                            |
-| **Jurusan**  | D-IV Teknik Informatika - POLINEMA |
+| **Program Studi**  | D-IV Teknik Informatika - POLINEMA |
 
 ---
 
