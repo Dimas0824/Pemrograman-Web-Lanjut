@@ -6,7 +6,7 @@
 | **NIM**      | 2341720088                    |
 | **Kelas**    | TI-2F                         |
 | **Absen**    | 17                            |
-| **Jurusan**  | Teknik Informatika - POLINEMA |
+| **Jurusan**  | D-IV Teknik Informatika - POLINEMA |
 
 ---
 
@@ -18,4 +18,4 @@ Semua tugas yang ada di repositori ini adalah hasil pembelajaran selama belajar 
 
 ---
 
-🔗 **Politeknik Negeri Malang** | 🏫 **Teknik Informatika**
+🔗 **Politeknik Negeri Malang** | 🏫 **D-IV Teknik Informatika**
