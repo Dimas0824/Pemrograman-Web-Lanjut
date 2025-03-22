@@ -18,4 +18,5 @@ Semua tugas yang ada di repositori ini adalah hasil pembelajaran selama belajar 
 
 ---
 
-🔗 **Politeknik Negeri Malang** | 🏫 **D-IV Teknik Informatika**
+🔗 [**Politeknik Negeri Malang**](https://www.polinema.ac.id) | 🏫 [**D-IV Teknik Informatika**](https://jti.polinema.ac.id)
+
