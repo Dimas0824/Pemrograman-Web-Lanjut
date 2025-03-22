@@ -15,6 +15,13 @@ Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter id, maka harus b
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postlogin']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+// Menampilkan halaman register
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register.form');
+
+// Proses registrasi
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 Route::middleware(['auth'])->group(function () { //login dulu sebelum akses route dibawah
     // Routes for dashboard (welcome.blade.php)
