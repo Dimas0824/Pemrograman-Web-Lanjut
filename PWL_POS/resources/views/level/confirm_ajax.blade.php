@@ -67,8 +67,11 @@
                                     icon: 'success',
                                     title: 'Berhasil',
                                     text: response.message
+                                }).then((result) => {
+                                    if (result.isConfirmed || result.isDismissed) {
+                                        location.reload();
+                                    }
                                 });
-                                dataLevel.ajax.reload();
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {
