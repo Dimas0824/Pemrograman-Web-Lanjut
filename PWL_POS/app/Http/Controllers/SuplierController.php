@@ -6,9 +6,7 @@ use App\Models\SuplierModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
 
 class SuplierController extends Controller
 {
