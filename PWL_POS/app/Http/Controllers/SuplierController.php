@@ -6,6 +6,9 @@ use App\Models\SuplierModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 
 class SuplierController extends Controller
 {
@@ -279,4 +282,69 @@ class SuplierController extends Controller
         }
         return redirect('/suplier');
     }
+    public function import()
+    {
+        return view('suplier.importSuplier');
+    }
+
+    //import ajax
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                // validasi file harus xls atau xlsx, max 1MB
+                'file_suplier' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $file = $request->file('file_suplier');  // ambil file dari request
+
+            $reader = IOFactory::createReader('Xlsx');  // load reader file excel
+            $reader->setReadDataOnly(true);             // hanya membaca data
+            $spreadsheet = $reader->load($file->getRealPath()); // load file excel
+            $sheet = $spreadsheet->getActiveSheet();    // ambil sheet yang aktif
+
+            $data = $sheet->toArray(null, false, true, true);   // ambil data excel   // ambil data excel
+
+            $insert = [];
+            if (count($data) > 1) {
+                foreach ($data as $baris => $value) {
+                    // Skip header jika semua cell kosong
+                    if ($baris > 1 && (!empty($value['A']) || !empty($value['B']) || !empty($value['C']))) {
+                        $insert[] = [
+                            'nama_suplier' => $value['A'],
+                            'kontak' => $value['B'],
+                            'alamat' => $value['C'],
+                            'created_at' => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    // insert data ke database, jika data sudah ada, maka diabaikan
+                    SuplierModel::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diimport'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+        }
+        return redirect('/suplier');
+    }
 }
+

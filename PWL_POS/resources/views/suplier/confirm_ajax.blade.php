@@ -80,7 +80,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                dataSuplier.ajax.reload();
+                                tableSuplier.ajax.reload();
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {
