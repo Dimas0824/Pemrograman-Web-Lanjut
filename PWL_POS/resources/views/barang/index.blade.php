@@ -45,8 +45,8 @@ btn-success">Tambah Data
                         <th>No</th>
                         <th>Kode Barang</th>
                         <th>Kode Barang</th>
-                        <th>Harga
-                            Beli</th>
+                        <th>Harga</th>
+                        <th>Beli</th>
                         <th>Harga Jual</th>
                         <th>Kategori</th>
                         <th>Aksi</th>

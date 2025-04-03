@@ -40,6 +40,10 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
         Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax']);
         Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']);
         Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']);
+
+        // Menambahkan rute baru
+        Route::get('/import', [UserController::class, 'import']); // ajax form upload excel
+        Route::post('/import_ajax', [UserController::class, 'import_ajax']); // ajax import excel
     });
 
     // Routes untuk Level dengan middleware auth dan authorize
@@ -56,6 +60,10 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
             Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);
             Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
+
+            // Menambahkan rute baru
+            Route::get('/import', [LevelController::class, 'import']); // ajax form upload excel
+            Route::post('/import_ajax', [LevelController::class, 'import_ajax']); // ajax import excel
         });
     });
 
@@ -72,6 +80,10 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
         Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
         Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
         Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
+
+        // Menambahkan rute baru
+        Route::get('/import', [KategoriController::class, 'import']); // ajax form upload excel
+        Route::post('/import_ajax', [KategoriController::class, 'import_ajax']); // ajax import excel
     });
 
     // Routes for Suplier
@@ -87,6 +99,10 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
         Route::put('/{id}/update_ajax', [SuplierController::class, 'update_ajax']);
         Route::get('/{id}/delete_ajax', [SuplierController::class, 'confirm_ajax']);
         Route::delete('/{id}/delete_ajax', [SuplierController::class, 'delete_ajax']);
+
+        // Menambahkan rute baru
+        Route::get('/import', [SuplierController::class, 'import']); // ajax form upload excel
+        Route::post('/import_ajax', [SuplierController::class, 'import_ajax']); // ajax import excel
     });
 
     // Routes for Barang

@@ -5,6 +5,8 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
+                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-info btn-sm mt-1">Import
+                    Kategori</button>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/create') }}">Tambah</a>
                 <button onclick="modalAction('{{ url('kategori/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
                     Ajax</button>
@@ -20,7 +22,7 @@
             <table class="table table-bordered table-striped table-hover table-sm" id="table_kategori">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>No urut</th>
                         <th>Kode Kategori</th>
                         <th>Nama Kategori</th>
                         <th>Aksi</th>
@@ -43,19 +45,30 @@
                 $('#myModal').modal('show');
             });
         }
+        var tableKategori;
         $(document).ready(function() {
-            var dataKategori = $('#table_kategori').DataTable({
+            tableKategori = $('#table_kategori').DataTable({
+                processing: true,
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('kategori/list') }}",
                     "dataType": "json",
-                    "type": "GET"
+                    "type": "GET",
+                    "data": function(d) {
+                        d.filter_kategori = $('.filter_kategori').val();
+                    }
                 },
                 columns: [{
-                        data: "kategori_id",
+                        data: null,
                         className: "text-center",
-                        orderable: true,
-                        searchable: true
+                        width: "5%",
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            // meta.row adalah indeks baris di halaman saat ini
+                            // meta.settings._iDisplayStart adalah indeks baris awal di halaman saat ini
+                            return meta.settings._iDisplayStart + meta.row + 1;
+                        }
                     },
                     {
                         data: "kategori_kode",
@@ -76,6 +89,14 @@
                         searchable: false
                     }
                 ]
+            });
+            $('#table_kategori_filter input').unbind().bind().on('keyup', function(e) {
+                if (e.keyCode == 13) { // enter key
+                    tableKategori.search(this.value).draw();
+                }
+            });
+            $('.filter_kategori').change(function() {
+                tableKategori.draw();
             });
         });
     </script>

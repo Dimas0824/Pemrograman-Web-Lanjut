@@ -105,7 +105,7 @@ confirm(\'Apakah Kita yakit menghapus data ini?\');">Hapus</button></form>';*/
                 'message' => 'Data berhasil disimpan'
             ]);
         }
-        redirect('/');
+        redirect('/barang');
     }
 
     public function edit_ajax($id)
@@ -156,7 +156,7 @@ confirm(\'Apakah Kita yakit menghapus data ini?\');">Hapus</button></form>';*/
                 ]);
             }
         }
-        return redirect('/');
+        return redirect('/barang');
     }
 
     public function confirm_ajax($id)
@@ -182,13 +182,14 @@ confirm(\'Apakah Kita yakit menghapus data ini?\');">Hapus</button></form>';*/
                 ]);
             }
         }
-        return redirect('/');
+        return redirect('/barang');
     }
 
     public function import()
     {
         return view('barang.import');
     }
+
     public function import_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
