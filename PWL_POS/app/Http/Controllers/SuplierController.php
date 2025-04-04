@@ -31,27 +31,6 @@ class SuplierController extends Controller
         ]);
     }
 
-    // Menampilkan halaman form tambah suplier
-    public function create()
-    {
-        $breadcrumb = (object) [
-            'title' => 'Tambah Suplier',
-            'list' => ['Home', 'Suplier', 'Tambah']
-        ];
-
-        $page = (object) [
-            'title' => 'Tambah suplier baru'
-        ];
-
-        $activeMenu = 'suplier'; // set menu yang sedang aktif
-
-        return view('suplier.create', [
-            'breadcrumb' => $breadcrumb,
-            'page' => $page,
-            'activeMenu' => $activeMenu
-        ]);
-    }
-
     // Menyimpan data suplier baru
     public function store(Request $request)
     {
@@ -343,6 +322,70 @@ class SuplierController extends Controller
             }
         }
         return redirect('/suplier');
+    }
+
+    //fungsi export
+    public function export_excel()
+    {
+        //ambil data suplier
+        $suplier = SuplierModel::select(
+            'suplier_id',
+            'nama_suplier',
+            'kontak',
+            'alamat',
+        )
+            ->orderBy('suplier_id')
+            ->get();
+
+        //load spreadsheet
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        //set header
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'ID suplier');
+        $sheet->setCellValue('C1', 'Nama suplier');
+        $sheet->setCellValue('D1', 'Kontak');
+        $sheet->setCellValue('E1', 'Alamat');
+
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true); ///bold header
+
+        //set data
+        $no = 1;
+        $baris = 2;
+        foreach ($suplier as $row) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $row->suplier_id);
+            $sheet->setCellValue('C' . $baris, $row->nama_suplier);
+            $sheet->setCellValue('D' . $baris, $row->kontak);
+            $sheet->setCellValue('E' . $baris, $row->alamat);
+            $no++;
+            $baris++;
+        }
+
+        //set lebar kolom
+        foreach (range('A', 'E') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true); //set autosize
+        }
+
+        //set judul file
+        $sheet->setTitle('Data Suplier'); // set title sheet
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data Suplier ' . date(format: 'Y-m-d H:i:s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+
     }
 }
 

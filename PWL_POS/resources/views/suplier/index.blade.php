@@ -7,7 +7,8 @@
             <div class="card-tools">
                 <button onclick="modalAction('{{ url('/suplier/import') }}')" class="btn btn-info btn-sm mt-1">Import
                     Suplier</button>
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('suplier/create') }}">Tambah</a>
+                <a href="{{ url('/suplier/export_excel') }}" class="btn btn-primary"><i class="fa fa-file excel"></i> Export
+                    Suplier</a>
                 <button onclick="modalAction('{{ url('suplier/create_ajax') }}')" class="btn btn-sm btn-success mt-1">
                     Tambah Ajax
                 </button>

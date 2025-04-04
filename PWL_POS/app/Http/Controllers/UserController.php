@@ -36,58 +36,6 @@ class UserController extends Controller
         ]);
     }
 
-    // // Ambil data user dalam bentuk JSON untuk DataTables
-    // public function list(Request $request)
-    // {
-    //     $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
-    //         ->with('level');
-
-    //     //filter data user berdasarkan level_id
-    //     if ($request->level_id) {
-    //         $users->where('level_id', $request->level_id);
-    //     }
-
-    //     return DataTables::of($users)
-    //         // Menambahkan kolom index / nomor urut (default nama kolom: DT RowIndex)
-    //         ->addIndexColumn()
-    //         ->addColumn('aksi', function ($user) { // Menambahkan kolom aksi
-    //             $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-    //             $btn .= '<a href="' . url('/user/' . $user->user_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-    //             $btn .= '<form class="d-inline-block" method="POST" action="' . url('/user/' . $user->user_id) . '">'
-    //                 . csrf_field()
-    //                 . method_field('DELETE')
-    //                 . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\')">Hapus</button>'
-    //                 . '</form>';
-    //             return $btn;
-    //         })
-    //         ->rawColumns(['aksi']) // Memberitahu bahwa kolom aksi adalah HTML
-    //         ->make(true);
-    // }
-
-
-    // Menampilkan halaman form tambah user
-    public function create()
-    {
-        $breadcrumb = (object) [
-            'title' => 'Tambah User',
-            'list' => ['Home', 'User', 'Tambah']
-        ];
-
-        $page = (object) [
-            'title' => 'Tambah user baru'
-        ];
-
-        $level = LevelModel::all(); // ambil data level untuk ditampilkan di form
-        $activeMenu = 'user'; // set menu yang sedang aktif
-
-        return view('user.create', [
-            'breadcrumb' => $breadcrumb,
-            'page' => $page,
-            'level' => $level,
-            'activeMenu' => $activeMenu
-        ]);
-    }
-
     // Menyimpan data user baru
     public function store(Request $request)
     {
@@ -405,6 +353,75 @@ class UserController extends Controller
             }
         }
         return redirect('/user');
+    }
+
+    //fungsi export
+    public function export_excel()
+    {
+        //ambil data user
+        $user = UserModel::select(
+            'user_id',
+            'level_id',
+            'username',
+            'nama',
+            'password',
+        )
+            ->orderBy('user_id')
+            ->with('level')
+            ->get();
+
+        //load spreadsheet
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        //set header
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'ID User');
+        $sheet->setCellValue('C1', 'Username');
+        $sheet->setCellValue('D1', 'Nama User');
+        $sheet->setCellValue('E1', 'Password');
+        $sheet->setCellValue('F1', 'Level');
+
+        $sheet->getStyle('A1:F1')->getFont()->setBold(true); ///bold header
+
+        //set data
+        $no = 1;
+        $baris = 2;
+        foreach ($user as $row) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $row->user_id);
+            $sheet->setCellValue('C' . $baris, $row->username);
+            $sheet->setCellValue('D' . $baris, $row->nama);
+            $sheet->setCellValue('E' . $baris, $row->password);
+            $sheet->setCellValue('F' . $baris, $row->level->level_nama);
+
+            $no++;
+            $baris++;
+        }
+
+        //set lebar kolom
+        foreach (range('A', 'F') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true); //set autosize
+        }
+
+        //set judul file
+        $sheet->setTitle('Data User'); // set title sheet
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data User ' . date(format: 'Y-m-d H:i:s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+
     }
 }
 
