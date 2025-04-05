@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class UserController extends Controller
@@ -421,7 +422,23 @@ class UserController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
 
+    //export pdf
+    public function export_pdf()
+    {
+        $user = UserModel::orderBy('user_id')
+            ->orderBy('level_id')
+            ->with('level')
+            ->get();
+
+        //gunakan barryvdh dompdf
+        $pdf = PDF::loadview('user.export_pdf', ['user' => $user]);
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption("isRemoteEnabled", true);
+        $pdf->render();
+
+        return $pdf->download('Data user ' . date('Y-m-d H:i:s') . '.pdf');
     }
 }
 
