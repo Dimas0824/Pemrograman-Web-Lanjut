@@ -7,6 +7,7 @@ use App\Http\Controllers\SuplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter id, maka harus berupa angka
@@ -26,6 +27,9 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::middleware(['auth'])->group(function () { //login dulu sebelum akses route dibawah
     // Routes for dashboard (welcome.blade.php)
     Route::get('/', [WelcomeController::class, 'index']);
+
+    //Route for profile
+    Route::post('/profile/update-avatar', [App\Http\Controllers\ProfileController::class, 'updateAvatar']);
 
     // Routes for User
     Route::group(['prefix' => 'user'], function () {
