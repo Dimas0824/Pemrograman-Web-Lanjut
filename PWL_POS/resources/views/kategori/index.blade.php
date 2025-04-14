@@ -25,7 +25,7 @@
             <table class="table table-bordered table-striped table-hover table-sm" id="table_kategori">
                 <thead>
                     <tr>
-                        <th>No urut</th>
+                        <th>No</th>
                         <th>Kode Kategori</th>
                         <th>Nama Kategori</th>
                         <th>Aksi</th>

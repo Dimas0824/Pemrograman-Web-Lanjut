@@ -132,6 +132,5 @@ Route::middleware(['auth'])->group(function () { //login dulu sebelum akses rout
         Route::get('/export_excel', [BarangController::class, 'export_excel']); // export excel
         Route::get('/export_pdf', [BarangController::class, 'export_pdf']); // export pdf
     });
-
 });
 

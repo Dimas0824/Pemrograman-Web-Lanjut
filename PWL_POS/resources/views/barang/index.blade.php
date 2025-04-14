@@ -49,7 +49,6 @@
                         <th>Harga</th>
                         <th>Beli</th>
                         <th>Harga Jual</th>
-                        <th>Kategori</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
