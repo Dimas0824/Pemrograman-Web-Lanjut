@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class UserModel extends Authenticatable implements JWTSubject
 {
@@ -32,6 +33,7 @@ class UserModel extends Authenticatable implements JWTSubject
         'nama',
         'password',
         'foto_profil',
+        'image', //tambahan
         'created_at',
         'updated_at'
     ];
@@ -46,6 +48,14 @@ class UserModel extends Authenticatable implements JWTSubject
     public function level(): BelongsTo
     {
         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
+    }
+
+    //image
+    protected function image(): Attribute
+    {  // Missing opening brace here
+        return Attribute::make(
+            get: fn($image) => asset('storage/posts/' . $image),
+        );
     }
 
     //mendapatkan nama role
