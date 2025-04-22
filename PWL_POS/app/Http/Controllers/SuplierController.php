@@ -195,41 +195,44 @@ class SuplierController extends Controller
             'suplier' => $suplier
         ]);
     }
-
     public function update_ajax(Request $request, $id)
     {
-        // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {
+            // Cari data suplier
+            $suplier = SuplierModel::find($id);
+            if (!$suplier) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+
+            // Aturan validasi
             $rules = [
-                'nama_suplier' => 'required|string|max:100',
-                'kontak' => 'required|string|max:50',
-                'alamat' => 'required|string|max:200'
+                'nama_suplier' => ['required', 'string', 'max:100'],
+                'kontak' => ['required', 'string', 'max:50'],
+                'alamat' => ['required', 'string', 'max:200'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false,    // respon json, true: berhasil, false: gagal
+                    'status' => false,
                     'message' => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
+                    'msgField' => $validator->errors()
                 ]);
             }
 
-            $check = SuplierModel::find($id);
-            if ($check) {
-                $check->update($request->all());
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diupdate'
-                ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Data tidak ditemukan'
-                ]);
-            }
+            // Update data
+            $suplier->update($request->only(['nama_suplier', 'kontak', 'alamat']));
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data suplier berhasil diupdate'
+            ]);
         }
+
         return redirect('/suplier');
     }
 

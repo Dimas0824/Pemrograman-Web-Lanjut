@@ -195,37 +195,53 @@ class LevelController extends Controller
 
     public function update_ajax(Request $request, $id)
     {
-        // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'level_code' => 'required|string|max:10|unique:m_level,level_code,' . $id . ',level_id',
-                'level_nama' => 'required|string|max:100'
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,    // respon json, true: berhasil, false: gagal
-                    'message' => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
-                ]);
-            }
-
-            $check = LevelModel::find($id);
-            if ($check) {
-                $check->update($request->all());
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diupdate'
-                ]);
-            } else {
+            // Cari data level yang akan diupdate
+            $level = LevelModel::find($id);
+            if (!$level) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Data tidak ditemukan'
                 ]);
             }
+
+            // Aturan validasi
+            $rules = [
+                'level_nama' => ['required', 'string', 'max:100'],
+            ];
+
+            // Tambahkan validasi unique hanya jika level_code diubah
+            if ($request->level_code !== $level->level_code) {
+                $rules['level_code'] = [
+                    'required',
+                    'string',
+                    'max:10',
+                    Rule::unique('m_level', 'level_code')
+                ];
+            } else {
+                $rules['level_code'] = ['required', 'string', 'max:10'];
+            }
+
+            // Proses validasi
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            // Update data
+            $level->update($request->only(['level_code', 'level_nama']));
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data level berhasil diupdate'
+            ]);
         }
+
         return redirect('/level');
     }
 
