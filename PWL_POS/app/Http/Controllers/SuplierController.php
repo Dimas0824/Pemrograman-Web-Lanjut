@@ -8,6 +8,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Validation\Rule;
 
 class SuplierController extends Controller
 {
@@ -209,10 +210,21 @@ class SuplierController extends Controller
 
             // Aturan validasi
             $rules = [
-                'nama_suplier' => ['required', 'string', 'max:100'],
                 'kontak' => ['required', 'string', 'max:50'],
-                'alamat' => ['required', 'string', 'max:200'],
+                'alamat' => ['required', 'string', 'max:200']
             ];
+
+            // Validasi nama_suplier unik hanya jika diubah
+            if ($request->nama_suplier !== $suplier->nama_suplier) {
+                $rules['nama_suplier'] = [
+                    'required',
+                    'string',
+                    'max:100',
+                    Rule::unique('m_suplier', 'nama_suplier')
+                ];
+            } else {
+                $rules['nama_suplier'] = ['required', 'string', 'max:100'];
+            }
 
             $validator = Validator::make($request->all(), $rules);
 
